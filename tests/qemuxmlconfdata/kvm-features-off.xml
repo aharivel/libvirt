@@ -16,6 +16,7 @@
       <poll-control state='off'/>
       <pv-ipi state='off'/>
       <dirty-ring state='off'/>
+      <rapl state='off'/>
     </kvm>
   </features>
   <cpu mode='host-passthrough' check='none' migratable='off'/>

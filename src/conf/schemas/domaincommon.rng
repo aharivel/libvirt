@@ -8128,6 +8128,16 @@
             </optional>
           </element>
         </optional>
+        <optional>
+          <element name="rapl">
+            <ref name="featurestate"/>
+            <optional>
+              <attribute name="socket">
+                <ref name="absFilePath"/>
+              </attribute>
+            </optional>
+          </element>
+        </optional>
       </interleave>
     </element>
   </define>
