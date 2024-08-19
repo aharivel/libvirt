@@ -223,6 +223,7 @@ VIR_ENUM_IMPL(virDomainKVM,
               "poll-control",
               "pv-ipi",
               "dirty-ring",
+              "rapl",
 );
 
 VIR_ENUM_IMPL(virDomainXen,
@@ -16698,6 +16699,11 @@ virDomainFeaturesKVMDefParse(virDomainDef *def,
                 return -1;
             }
         }
+
+        /* rapl feature should parse socket property */
+        if (feature == VIR_DOMAIN_KVM_RAPL && value == VIR_TRISTATE_SWITCH_ON) {
+            kvm->rapl_helper_socket = virXMLPropString(feat, "socket");
+        }
     }
 
     def->features[VIR_DOMAIN_FEATURE_KVM] = VIR_TRISTATE_SWITCH_ON;
@@ -21117,6 +21123,7 @@ virDomainDefFeaturesCheckABIStability(virDomainDef *src,
             case VIR_DOMAIN_KVM_POLLCONTROL:
             case VIR_DOMAIN_KVM_PVIPI:
             case VIR_DOMAIN_KVM_DIRTY_RING:
+            case VIR_DOMAIN_KVM_RAPL:
                 if (src->kvm_features->features[i] != dst->kvm_features->features[i]) {
                     virReportError(VIR_ERR_CONFIG_UNSUPPORTED,
                                    _("State of KVM feature '%1$s' differs: source: '%2$s', destination: '%3$s'"),
@@ -27849,6 +27856,17 @@ virDomainDefFormatFeatures(virBuffer *buf,
                         } else {
                             virBufferAddLit(&childBuf, "/>\n");
                         }
+                    }
+                    break;
+
+                case VIR_DOMAIN_KVM_RAPL:
+                    if (def->kvm_features->features[j] != VIR_TRISTATE_SWITCH_ABSENT) {
+                        virBufferAsprintf(&childBuf, "<%s state='%s'",
+                                          virDomainKVMTypeToString(j),
+                                          virTristateSwitchTypeToString(def->kvm_features->features[j]));
+
+                        virBufferEscapeString(&childBuf, " socket='%s'", def->kvm_features->rapl_helper_socket);
+                        virBufferAddLit(&childBuf, "/>\n");
                     }
                     break;
 

@@ -6572,6 +6572,9 @@ qemuBuildCpuCommandLine(virCommand *cmd,
             case VIR_DOMAIN_KVM_DIRTY_RING:
                 break;
 
+            case VIR_DOMAIN_KVM_RAPL:
+                break;
+
             case VIR_DOMAIN_KVM_LAST:
                 break;
             }
@@ -7190,6 +7193,14 @@ qemuBuildAccelCommandLine(virCommand *cmd,
         if (def->features[VIR_DOMAIN_FEATURE_KVM] == VIR_TRISTATE_SWITCH_ON &&
             def->kvm_features->features[VIR_DOMAIN_KVM_DIRTY_RING] == VIR_TRISTATE_SWITCH_ON) {
             virBufferAsprintf(&buf, ",dirty-ring-size=%d", def->kvm_features->dirty_ring_size);
+        }
+        if (def->features[VIR_DOMAIN_FEATURE_KVM] == VIR_TRISTATE_SWITCH_ON &&
+            def->kvm_features->features[VIR_DOMAIN_KVM_RAPL] == VIR_TRISTATE_SWITCH_ON) {
+            virBufferAddLit(&buf, ",rapl=true");
+
+            if (def->kvm_features->rapl_helper_socket != NULL) {
+                virBufferAsprintf(&buf, ",rapl-helper-socket=%s", def->kvm_features->rapl_helper_socket);
+            }
         }
         break;
 

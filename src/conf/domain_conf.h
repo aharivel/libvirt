@@ -2216,6 +2216,7 @@ typedef enum {
     VIR_DOMAIN_KVM_POLLCONTROL,
     VIR_DOMAIN_KVM_PVIPI,
     VIR_DOMAIN_KVM_DIRTY_RING,
+    VIR_DOMAIN_KVM_RAPL,
 
     VIR_DOMAIN_KVM_LAST
 } virDomainKVM;
@@ -2403,6 +2404,7 @@ struct _virDomainFeatureKVM {
     int features[VIR_DOMAIN_KVM_LAST];
 
     unsigned int dirty_ring_size; /* size of dirty ring for each vCPU, no units */
+    char *rapl_helper_socket; /* rapl helper socket */
 };
 
 typedef struct _virDomainFeatureTCG virDomainFeatureTCG;
