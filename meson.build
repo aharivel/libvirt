@@ -954,6 +954,11 @@ if blkid_dep.found()
   conf.set('WITH_BLKID', 1)
 endif
 
+libbsd_dep = dependency('libbsd', required: false)
+if libbsd_dep.found()
+  conf.set('WITH_LIBBSD', 1)
+endif
+
 capng_dep = dependency('libcap-ng', required: get_option('capng'))
 if capng_dep.found()
   conf.set('WITH_CAPNG', 1)
@@ -1855,13 +1860,6 @@ if conf.has('WITH_LIBVIRTD')
       conf.set_quoted('MOUNT', mount_prog.full_path())
       conf.set_quoted('UMOUNT', umount_prog.full_path())
       conf.set_quoted('MKFS', mkfs_prog.full_path())
-
-      showmount_prog = find_program('showmount', required: false, dirs: libvirt_sbin_path)
-      showmount_path = ''
-      if showmount_prog.found()
-        showmount_path = showmount_prog.full_path()
-      endif
-      conf.set_quoted('SHOWMOUNT', showmount_path)
     endif
   endif
 
@@ -2342,6 +2340,7 @@ libs_summary = {
   'dlopen': dlopen_dep.found(),
   'fuse': fuse_dep.found(),
   'glusterfs': glusterfs_dep.found(),
+  'libbsd': libbsd_dep.found(),
   'libiscsi': libiscsi_dep.found(),
   'libkvm': libkvm_dep.found(),
   'libnbd': libnbd_dep.found(),
