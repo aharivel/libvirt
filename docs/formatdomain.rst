@@ -2022,6 +2022,7 @@ Hypervisors may allow certain CPU / machine features to be toggled on/off.
        <poll-control state='on'/>
        <pv-ipi state='off'/>
        <dirty-ring state='on' size='4096'/>
+       <rapl state ='on' socket='/run/qemu-vmsr-helper.sock'/>
      </kvm>
      <xen>
        <e820_host state='on'/>
@@ -2141,7 +2142,21 @@ are:
    poll-control   Decrease IO completion latency by introducing a grace period of busy waiting on, off                                                :since:`6.10.0 (QEMU 4.2)`
    pv-ipi         Paravirtualized send IPIs                                                    on, off                                                :since:`7.10.0 (QEMU 3.1)`
    dirty-ring     Enable dirty ring feature                                                    on, off; size - must be power of 2, range [1024,65536] :since:`8.0.0 (QEMU 6.1)`
+   rapl           Enable rapl feature                                                          on, off; socket - rapl helper socket                   :since:`11.1.0 (QEMU 9.1)`
    ============== ============================================================================ ====================================================== ============================
+
+   ``rapl``
+      The RAPL feature enables a subset of Model-Specific Registers (MSRs)
+      within the guest, specifically dedicated to Intel's Running Average Power
+      Limit (RAPL). This feature requires a socket connection to an external
+      daemon to retrieve host MSRs. QEMU provides a helper,
+      ``qemu-vmsr-helper``, which can be used for this purpose. This dedicated
+      helper is not managed by libvirt and must be running on the host before
+      any guest with this feature enabled can boot.
+
+      Libvirt does not handle socket security regarding Mandatory Access Control
+      (MAC) or Discretionary Access Control (DAC). Only one helper daemon is
+      needed per host, even when multiple guests are present.
 
 ``xen``
    Various features to change the behavior of the Xen hypervisor.

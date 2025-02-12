@@ -16,6 +16,7 @@
       <poll-control state='on'/>
       <pv-ipi state='on'/>
       <dirty-ring state='on' size='4096'/>
+      <rapl state='on' socket='/run/qemu-vmsr-helper.sock'/>
     </kvm>
   </features>
   <cpu mode='host-passthrough' check='none' migratable='off'/>
